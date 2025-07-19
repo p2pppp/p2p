@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Крипто-обменник</title>
+    <style>
+        body { font-family: Arial; background: #f6f6f6; padding: 40px; }
+        .container { max-width: 400px; margin: auto; background: white; padding: 24px; border-radius: 8px; box-shadow: 0 0 8px #ccc; }
+        input, select { width: 100%; margin: 8px 0; padding: 8px; border-radius: 4px; border: 1px solid #ddd; }
+        button { background: #2b7cff; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #1552e0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Обмен криптовалют (0.5% комиссия)</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Обменять</button>
+    </form>
+    {% if result %}
+        <h3>Результат обмена:</h3>
+        <p>Вы получите: <strong>{{ result.result_amount }}</strong> (с учетом комиссии)</p>
+        <p>Комиссия: <strong>{{ result.commission }}</strong></p>
+        <p>Курс: <strong>{{ result.rate }}</strong></p>
+    {% endif %}
+</div>
+</body>
+</html>
