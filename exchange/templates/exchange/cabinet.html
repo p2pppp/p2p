@@ -1,0 +1,14 @@
+<h2>Мои обмены</h2>
+<table>
+    <tr><th>Дата</th><th>От</th><th>Кому</th><th>Сумма</th><th>Статус</th><th>Комиссия</th></tr>
+    {% for t in transactions %}
+      <tr>
+        <td>{{ t.created_at }}</td>
+        <td>{{ t.from_currency }}</td>
+        <td>{{ t.to_currency }}</td>
+        <td>{{ t.amount }}</td>
+        <td>{{ t.status }}</td>
+        <td>{{ t.commission }}</td>
+      </tr>
+    {% endfor %}
+</table>
