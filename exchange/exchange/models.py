@@ -27,3 +27,19 @@ class Offer(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     # другие параметры фильтрации
+class Deal(models.Model):
+    buyer = models.ForeignKey(UserProfile, related_name='buyer_deals', on_delete=models.CASCADE)
+    seller = models.ForeignKey(UserProfile, related_name='seller_deals', on_delete=models.CASCADE)
+    offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    status = models.CharField(max_length=16, choices=[
+        ('created','Создана'),('paid','Оплачена'),('released','Завершена'),('dispute','Спор'),('cancelled','Отменена')
+    ])
+    commission_rate = models.DecimalField(max_digits=4, decimal_places=2)
+    commission_buyer = models.DecimalField(max_digits=12, decimal_places=2)
+    commission_seller = models.DecimalField(max_digits=12, decimal_places=2)
+    frozen = models.BooleanField(default=False)
+    dispute_reason = models.TextField(blank=True)
+    dispute_files = models.FileField(upload_to='disputes/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    # ...
