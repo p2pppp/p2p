@@ -44,3 +44,7 @@ def exchange(request):
                 'rate': rate
             }
     return render(request, 'exchange/exchange.html', {'form': form, 'result': result})
+@login_required
+def cabinet(request):
+    transactions = Transaction.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'exchange/cabinet.html', {'transactions': transactions})
