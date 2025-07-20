@@ -13,3 +13,17 @@ class UserProfile(models.Model):
     is_admin = models.BooleanField(default=False)
     balance_usdt = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     # ...другие поля, например, по фиату
+class FiatPayment(models.Model):
+    name = models.CharField(max_length=30)  # Qiwi, ЮMoney, PayPal, etc.
+
+class Offer(models.Model):
+    seller = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    crypto_currency = models.CharField(max_length=10) # BTC, ETH, USDT
+    fiat_currency = models.CharField(max_length=10) # RUB, USD, EUR, etc.
+    payment_method = models.ForeignKey(FiatPayment, on_delete=models.CASCADE)
+    min_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    max_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    rate = models.DecimalField(max_digits=12, decimal_places=2)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    # другие параметры фильтрации
