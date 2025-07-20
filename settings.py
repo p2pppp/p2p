@@ -4,3 +4,7 @@ INSTALLED_APPS += [
     "two_factor",
     "django_allauth",
 ]
+LANGUAGES = [
+    ('ru', 'Russian'),
+    ('en', 'English'),
+]
