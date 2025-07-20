@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=20, unique=True)
-    kyc_passport = models.FileField(upload_to='kyc/')
+    kyc_passport = models.FileField(upload_to='kyc/', null=True, blank=True)
     kyc_status = models.CharField(max_length=20, choices=[('pending','На проверке'), ('approved','Одобрено'), ('rejected','Отклонено')], default='pending')
     referral_code = models.CharField(max_length=16, unique=True)
     invited_by = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
@@ -12,7 +12,8 @@ class UserProfile(models.Model):
     is_blocked = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     balance_usdt = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    # ...другие поля, например, по фиату
+    telegram_id = models.CharField(max_length=32, null=True, blank=True)
+
 class FiatPayment(models.Model):
     name = models.CharField(max_length=30)  # Qiwi, ЮMoney, PayPal, etc.
 
@@ -26,7 +27,7 @@ class Offer(models.Model):
     rate = models.DecimalField(max_digits=12, decimal_places=2)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    # другие параметры фильтрации
+
 class Deal(models.Model):
     buyer = models.ForeignKey(UserProfile, related_name='buyer_deals', on_delete=models.CASCADE)
     seller = models.ForeignKey(UserProfile, related_name='seller_deals', on_delete=models.CASCADE)
@@ -42,9 +43,16 @@ class Deal(models.Model):
     dispute_reason = models.TextField(blank=True)
     dispute_files = models.FileField(upload_to='disputes/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    # ...
+
 class Message(models.Model):
     deal = models.ForeignKey(Deal, on_delete=models.CASCADE)
     sender = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     text = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+class SupportTicket(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=100)
+    message = models.TextField()
+    is_resolved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
