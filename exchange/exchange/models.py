@@ -1,27 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class Currency(models.Model):
-    code = models.CharField(max_length=10, unique=True) # 'USDT', 'BTC', 'ETH'
-    name = models.CharField(max_length=30)
-
-    def __str__(self):
-        return self.code
-
-class Transaction(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    from_currency = models.ForeignKey(Currency, related_name='from_currency', on_delete=models.CASCADE)
-    to_currency = models.ForeignKey(Currency, related_name='to_currency', on_delete=models.CASCADE)
-    amount = models.FloatField()
-    rate = models.FloatField()
-    result_amount = models.FloatField()
-    commission = models.FloatField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('done', 'Done'), ('failed', 'Failed')], default='pending')
-class Profile(models.Model):
+class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    referral_code = models.CharField(max_length=20, unique=True)
-    invited_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='referrals')
-class Fee(models.Model):
-    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
-    percent = models.FloatField(default=0.5)
+    phone = models.CharField(max_length=20, unique=True)
+    kyc_passport = models.FileField(upload_to='kyc/')
+    kyc_status = models.CharField(max_length=20, choices=[('pending','На проверке'), ('approved','Одобрено'), ('rejected','Отклонено')], default='pending')
+    referral_code = models.CharField(max_length=16, unique=True)
+    invited_by = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
+    deals_count = models.PositiveIntegerField(default=0)
+    is_blocked = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
+    balance_usdt = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    # ...другие поля, например, по фиату
