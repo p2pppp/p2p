@@ -43,3 +43,8 @@ class Deal(models.Model):
     dispute_files = models.FileField(upload_to='disputes/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     # ...
+class Message(models.Model):
+    deal = models.ForeignKey(Deal, on_delete=models.CASCADE)
+    sender = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    text = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
