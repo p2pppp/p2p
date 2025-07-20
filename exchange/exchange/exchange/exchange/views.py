@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from .forms import ExchangeForm
 from .models import Currency, Transaction
@@ -48,3 +49,23 @@ def exchange(request):
 def cabinet(request):
     transactions = Transaction.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'exchange/cabinet.html', {'transactions': transactions})
+def offers_list(request):
+    # фильтры по валюте, сумме, платежке
+    currency = request.GET.get('crypto')
+    fiat = request.GET.get('fiat')
+    payment = request.GET.get('payment')
+    min_sum = request.GET.get('min')
+    max_sum = request.GET.get('max')
+    offers = Offer.objects.filter(is_active=True)
+    if currency:
+        offers = offers.filter(crypto_currency=currency)
+    if fiat:
+        offers = offers.filter(fiat_currency=fiat)
+    if payment:
+        offers = offers.filter(payment_method__name=payment)
+    if min_sum:
+        offers = offers.filter(min_amount__lte=min_sum)
+    if max_sum:
+        offers = offers.filter(max_amount__gte=max_sum)
+    # ...
+    return render(request, 'exchange/offers_list.html', {'offers': offers})
