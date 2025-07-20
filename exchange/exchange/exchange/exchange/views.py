@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .forms import ExchangeForm
 from .models import Currency, Transaction
 from django.contrib.auth.decorators import login_required
+from .models import Offer
 
 # Пример статических курсов (для MVP, позже интеграция с API)
 RATES = {
