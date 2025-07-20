@@ -184,3 +184,42 @@
     </div>
 </body>
 </html>
+<div class="card">
+    <h2 style="color:#32a852;">Объявления P2P</h2>
+    <form method="GET" class="filters">
+        <select name="crypto" class="btn-main">
+            <option value="">Все криптовалюты</option>
+            <option value="BTC">BTC</option>
+            <option value="ETH">ETH</option>
+            <option value="USDT">USDT</option>
+        </select>
+        <select name="fiat" class="btn-main">
+            <option value="">Все фиат</option>
+            <option value="RUB">RUB</option>
+            <option value="USD">USD</option>
+            <option value="KZT">KZT</option>
+            <!-- и др. -->
+        </select>
+        <select name="payment" class="btn-main">
+            <option value="">Все платежные системы</option>
+            <option value="Qiwi">Qiwi</option>
+            <option value="ЮMoney">ЮMoney</option>
+            <option value="PayPal">PayPal</option>
+            <!-- и др. -->
+        </select>
+        <input type="number" name="min" placeholder="Мин. сумма" class="btn-main">
+        <input type="number" name="max" placeholder="Макс. сумма" class="btn-main">
+        <button type="submit" class="btn-main">Фильтр</button>
+    </form>
+    <div class="offers-list">
+        {% for offer in offers %}
+            <div class="card">
+                <span>{{ offer.crypto_currency }} / {{ offer.fiat_currency }}</span>
+                <span>{{ offer.payment_method.name }}</span>
+                <span>{{ offer.rate }} за 1 {{ offer.crypto_currency }}</span>
+                <span>От {{ offer.min_amount }} до {{ offer.max_amount }}</span>
+                <button class="btn-main" onclick="location.href='/deal/start/{{offer.id}}/'">Начать сделку</button>
+            </div>
+        {% endfor %}
+    </div>
+</div>
